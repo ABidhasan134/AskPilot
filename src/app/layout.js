@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="dark">
       <body
-        className={`${monaSans} antialiased`}
+        className={`${monaSans} antialiased pattern`}
         cz-shortcut-listen="true"
       >
         {children}
