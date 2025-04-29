@@ -4,25 +4,26 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import Image from "next/image";
-import logo from '/public/logo.svg'
+import logo from "/public/logo.svg";
 import FromField from "./fromFild";
+import Link from "next/link";
 
 export const formSchema = z.object({
-  username: z.string().min(2).max(50),
-})
+  fullName: z.string().min(2).max(50),
+  email: '',
+});
 
-function AuthForm() {
+function AuthForm({ type }) {
+  const isLogIn = type === "logIn";
+  // console.log(isLogIn)
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      fullName: "",
     },
   });
-
 
   function onSubmit(values) {
     console.log(values);
@@ -39,12 +40,17 @@ function AuthForm() {
         {/* Form start */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <FromField form={form} />
-            <Button type="submit">Submit</Button>
+            <FromField form={form} isLogIn={isLogIn} />
+            <Button type="submit" className="btn-primary">
+              {isLogIn ? "Log In" : "create an account"}
+            </Button>
           </form>
         </Form>
         {/* Form end */}
-
+        <p className="text-center gap-1">
+          {isLogIn?"Don't have account please ":"you already have a account please "}
+          <Link className="text-user-primary" href={isLogIn?" sign-up":" sign-in"}>{isLogIn?"sing Up":"Log In"}</Link>
+        </p>
       </div>
     </div>
   );
