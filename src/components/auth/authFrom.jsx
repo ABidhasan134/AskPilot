@@ -10,18 +10,29 @@ import logo from "/public/logo.svg";
 import FromField from "./fromFild";
 import Link from "next/link";
 
-export const formSchema = z.object({
-  fullName: z.string().min(2).max(50),
-  email: '',
-});
-
 function AuthForm({ type }) {
   const isLogIn = type === "logIn";
-  // console.log(isLogIn)
+
+  const baseSchema = {
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+  };
+
+  const formSchema = z.object(
+    isLogIn
+      ? baseSchema
+      : {
+          fullName: z.string().min(2, "Full name is required").max(50),
+          ...baseSchema,
+        }
+  );
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       fullName: "",
+      email: "",
+      password: "",
     },
   });
 
@@ -37,19 +48,22 @@ function AuthForm({ type }) {
           <h2 className="text-primary-100">Ask Pilot</h2>
         </div>
 
-        {/* Form start */}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FromField form={form} isLogIn={isLogIn} />
             <Button type="submit" className="btn-primary">
-              {isLogIn ? "Log In" : "create an account"}
+              {isLogIn ? "Log In" : "Create an Account"}
             </Button>
           </form>
         </Form>
-        {/* Form end */}
+
         <p className="text-center gap-1">
-          {isLogIn?"Don't have account please ":"you already have a account please "}
-          <Link className="text-user-primary" href={isLogIn?" sign-up":" sign-in"}>{isLogIn?"sing Up":"Log In"}</Link>
+          {isLogIn
+            ? "Don't have an account?"
+            : "Already have an account?"}{" "}
+          <Link className="text-user-primary" href={isLogIn ? "/sign-up" : "/sign-in"}>
+            {isLogIn ? "Sign Up" : "Log In"}
+          </Link>
         </p>
       </div>
     </div>

@@ -8,12 +8,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 
 const FromField = ({ form, isLogIn }) => {
   return (
     <>
-      {/* Full name field (only on Sign Up) */}
+      {/* Full name field (only for Sign Up) */}
       {!isLogIn && (
         <FormField
           control={form.control}
@@ -46,7 +46,8 @@ const FromField = ({ form, isLogIn }) => {
           </FormItem>
         )}
       />
-      {/* password field */}
+
+      {/* Password field */}
       <FormField
         control={form.control}
         name="password"
@@ -56,16 +57,19 @@ const FromField = ({ form, isLogIn }) => {
             <FormControl>
               <Input type="password" placeholder="Enter your password" {...field} />
             </FormControl>
-            <FormDescription>We'll never share your password.</FormDescription>
+            <FormDescription>Make sure it's strong and secure.</FormDescription>
             <FormMessage />
           </FormItem>
         )}
       />
-      {/* file input system */}
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-      <Label htmlFor="picture">Picture</Label>
-      <Input id="picture" type="file" />
-    </div>
+
+      {/* File input (optional, only for Sign Up) */}
+      {!isLogIn && (
+        <div className="grid w-full max-w-sm items-center gap-1.5">
+          <Label htmlFor="picture">Profile Picture</Label>
+          <Input id="picture" type="file" />
+        </div>
+      )}
     </>
   );
 };
