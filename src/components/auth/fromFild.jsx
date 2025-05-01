@@ -8,12 +8,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 const FromField = ({ form, isLogIn }) => {
   return (
     <>
-      {/* Full name field (only for Sign Up) */}
       {!isLogIn && (
         <FormField
           control={form.control}
@@ -31,7 +29,6 @@ const FromField = ({ form, isLogIn }) => {
         />
       )}
 
-      {/* Email field */}
       <FormField
         control={form.control}
         name="email"
@@ -47,7 +44,6 @@ const FromField = ({ form, isLogIn }) => {
         )}
       />
 
-      {/* Password field */}
       <FormField
         control={form.control}
         name="password"
@@ -63,12 +59,24 @@ const FromField = ({ form, isLogIn }) => {
         )}
       />
 
-      {/* File input (optional, only for Sign Up) */}
       {!isLogIn && (
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="picture">Profile Picture</Label>
-          <Input id="picture" type="file" />
-        </div>
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Profile Picture</FormLabel>
+              <FormControl>
+                <Input
+                  id="image"
+                  type="file"
+                  onChange={(e) => field.onChange(e.target.files?.[0])}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       )}
     </>
   );

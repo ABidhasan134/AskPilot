@@ -23,6 +23,13 @@ function AuthForm({ type }) {
       ? baseSchema
       : {
           fullName: z.string().min(2, "Full name is required").max(50),
+          image: z
+            .instanceof(File)
+            .refine(
+              (file) => file.size < 5 * 1024 * 1024,
+              "Max file size is 5MB"
+            ),
+
           ...baseSchema,
         }
   );
@@ -33,11 +40,17 @@ function AuthForm({ type }) {
       fullName: "",
       email: "",
       password: "",
+      image: "",
     },
   });
 
   function onSubmit(values) {
-    console.log(values);
+    // console.log(values);
+    if (isLogIn) {
+      console.log("this is log in information", values);
+    } else {
+      console.log("this is sing up information", values);
+    }
   }
 
   return (
@@ -58,10 +71,11 @@ function AuthForm({ type }) {
         </Form>
 
         <p className="text-center gap-1">
-          {isLogIn
-            ? "Don't have an account?"
-            : "Already have an account?"}{" "}
-          <Link className="text-user-primary" href={isLogIn ? "/sign-up" : "/sign-in"}>
+          {isLogIn ? "Don't have an account?" : "Already have an account?"}{" "}
+          <Link
+            className="text-user-primary"
+            href={isLogIn ? "/sign-up" : "/sign-in"}
+          >
             {isLogIn ? "Sign Up" : "Log In"}
           </Link>
         </p>
