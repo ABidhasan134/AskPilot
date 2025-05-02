@@ -9,6 +9,7 @@ import Image from "next/image";
 import logo from "/public/logo.svg";
 import FromField from "./fromFild";
 import Link from "next/link";
+import { toast } from "sonner";
 
 function AuthForm({ type }) {
   const isLogIn = type === "logIn";
@@ -48,6 +49,7 @@ function AuthForm({ type }) {
     // console.log(values);
     if (isLogIn) {
       console.log("this is log in information", values);
+      toast.success("you log in succesfully");
     } else {
       console.log("this is sing up information", values);
     }
