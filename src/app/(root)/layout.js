@@ -1,11 +1,28 @@
-import React from 'react'
+import { Mona_Sans } from "next/font/google";
+import "../globals.css";
+import Navbar from "@/components/shared/navbar";
 
-const RootLayout = ({children}) => {
+const monaSans = Mona_Sans({
+  variable: "--font-Mona-sans",
+  subsets: ["latin"],
+});
+
+
+export const metadata = {
+  title: "Ask Pilot",
+  description: "AI powered platfrom for preperring for mock interview",
+};
+
+export default function RootLayout({ children }) {
   return (
-    <div>
-      {children}
-    </div>
-  )
+    <html lang="en" className="dark">
+      <body
+        className={`${monaSans} antialiased pattern root-layout`}
+        cz-shortcut-listen="true"
+      >
+        <Navbar></Navbar>
+        {children}
+      </body>
+    </html>
+  );
 }
-
-export default RootLayout
