@@ -1,7 +1,9 @@
+import HomeBannar from "@/components/home/homeBannar";
 
 export default function Home() {
   return (
-    <div>main page 
+    <div>
+      <HomeBannar></HomeBannar>
     </div>
   );
 }
