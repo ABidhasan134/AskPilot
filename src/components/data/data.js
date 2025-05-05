@@ -9,6 +9,7 @@ export const dummyInterviews = [
       questions: ["What is React?"],
       finalized: false,
       createdAt: "2024-03-15T10:00:00Z",
+      cover: '../../../public/covers/adobe.png'
     },
     {
       id: "2",
@@ -20,5 +21,6 @@ export const dummyInterviews = [
       questions: ["What is Node.js?"],
       finalized: false,
       createdAt: "2024-03-14T15:30:00Z",
+      cover: '../../../public/covers/amazon.png'
     },
   ];
