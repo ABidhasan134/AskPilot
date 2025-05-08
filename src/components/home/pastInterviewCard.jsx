@@ -3,6 +3,7 @@ import React from 'react'
 import cover from '@/../../public/covers/adobe.png'
 import { FaCalendarAlt } from "react-icons/fa";
 import { VscStarEmpty } from "react-icons/vsc";
+import Link from 'next/link';
 
 const PastInterviewCard = ({interview}) => {
     console.log(interview)
@@ -29,8 +30,17 @@ const PastInterviewCard = ({interview}) => {
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ab optio saepe distinctio, cupiditate fugiat corrupti in tempora repellendus quaerat, libero numquam, quis aut quam itaque! Nostrum expedita aliquam maxime?
         </p>
         {/* technology and btn */}
-        <div>
-        
+        <div className='flex justify-between p-2'>
+          <div>
+            <Image src={interview.techImage} alt='technology Image' width={30} height={30} className='rounded-full'></Image>
+          </div>
+          <button className='btn-primary'>
+            <Link href={
+              interview.feedback?`/interview/${interview._id}/feedback`:`/interview/${interview._id}`
+            }>
+            {interview.feedback?'Check feedback':'view interview'}
+            </Link>
+          </button>
         </div>
       </div>
     </div>
