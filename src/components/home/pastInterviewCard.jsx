@@ -6,7 +6,7 @@ import { VscStarEmpty } from "react-icons/vsc";
 import Link from 'next/link';
 
 const PastInterviewCard = ({interview}) => {
-    console.log(interview)
+    // console.log(interview)
   return (
     <div className='card-border w-[360px] max-sm:w-full'>
       <div className='card-interview'>

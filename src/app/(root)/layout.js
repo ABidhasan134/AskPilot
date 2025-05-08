@@ -2,7 +2,7 @@ import { Mona_Sans } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/shared/navbar";
 
-const monaSans = Mona_Sans({
+export const monaSans = Mona_Sans({
   variable: "--font-Mona-sans",
   subsets: ["latin"],
 });
