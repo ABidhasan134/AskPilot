@@ -10,8 +10,10 @@ import logo from "/public/logo.svg";
 import FromField from "./fromFild";
 import Link from "next/link";
 import { toast } from "sonner";
+import UseAxiosPublic from "@/hooks/useAxiosPublic";
 
 function AuthForm({ type }) {
+  const axiosPublic=UseAxiosPublic();
   // console.log(db);
   const isLogIn = type === "logIn";
 
@@ -52,8 +54,9 @@ function AuthForm({ type }) {
       console.log("this is log in information", values);
       toast.success("you log in succesfully");
     } else {
-      
-      console.log("this is sing up information", values);
+      const response=axiosPublic.post('/api/logIn',values)
+      console.log(response.result)
+      console.log("this is sing up information", response);
     }
   }
 
