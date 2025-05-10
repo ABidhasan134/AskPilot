@@ -52,7 +52,7 @@ function AuthForm({ type }) {
       console.log("this is log in information", values);
       toast.success("you log in succesfully");
     } else {
-
+      
       console.log("this is sing up information", values);
     }
   }
