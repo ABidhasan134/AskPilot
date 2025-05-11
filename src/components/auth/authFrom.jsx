@@ -55,7 +55,7 @@ function AuthForm({ type }) {
       toast.success("you log in succesfully");
     } else {
       const response=axiosPublic.post('/api/logIn',values)
-      console.log(response.result)
+      console.log(response.result.data.result)
       console.log("this is sing up information", response);
     }
   }
