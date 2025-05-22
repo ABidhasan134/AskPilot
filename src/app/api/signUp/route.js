@@ -11,6 +11,7 @@ export async function POST(request) {
     const currentUser= await usersCollection.findOne(query)
     console.log(currentUser);
     if(currentUser){
+      console.log("already user exit", currentUser);
         return NextResponse.json({
             result: currentUser,
             status: 403
@@ -23,6 +24,7 @@ export async function POST(request) {
         password: body.password
     }
     const result = await usersCollection.insertOne(userInfo);
+    console.log("sign up result for the",result)
     return NextResponse.json({
       result,
       status: 200,
