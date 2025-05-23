@@ -11,10 +11,11 @@ import FromField from "./fromFild";
 import Link from "next/link";
 import { toast } from "sonner";
 import UseAxiosPublic from "@/hooks/useAxiosPublic";
+import axios from "axios";
 
-const imageHostkey = process.env.NEXT_IMAGE_HOSTING_API_KEY;
+const imageHostkey = process.env.NEXT_PUBLIC_IMAGE_HOSTING_API_KEY;
 const hostURl=`https://api.imgbb.com/1/upload?key=${imageHostkey}`;
-
+console.log(imageHostkey)
 function AuthForm({ type }) {
   const axiosPublic=UseAxiosPublic();
   // console.log(db);
@@ -57,8 +58,8 @@ function AuthForm({ type }) {
       const formData = new FormData();
       formData.append("image", values.image);
 
-      const res = await axiosPublic.post(hostURl, formData, {
-        headers: { "Content-Type": "multipart/form-data", withCredentials: true, },
+      const res = await axios.post(hostURl, formData, {
+        headers: { "Content-Type": "multipart/form-data"},
       });
 
       const imageUrl = res.data?.data?.display_url;
