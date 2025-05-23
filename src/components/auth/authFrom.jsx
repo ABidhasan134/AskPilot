@@ -12,6 +12,9 @@ import Link from "next/link";
 import { toast } from "sonner";
 import UseAxiosPublic from "@/hooks/useAxiosPublic";
 
+const imageHostkey = process.env.NEXT_IMAGE_HOSTING_API_KEY;
+const hostURl=`https://api.imgbb.com/1/upload?key=${imageHostkey}`;
+
 function AuthForm({ type }) {
   const axiosPublic=UseAxiosPublic();
   // console.log(db);
@@ -48,15 +51,30 @@ function AuthForm({ type }) {
     },
   });
 
-  function onSubmit(values) {
+ async function onSubmit(values) {
     // console.log(values);
-    if (isLogIn) {
-      console.log("this is log in information", values);
-      toast.success("you log in succesfully");
-    } else {
-      const response=axiosPublic.post('/api/signUp',values)
-      // console.log(response.data)
-      console.log("this is sing up information", response);
+     try {
+      const formData = new FormData();
+      formData.append("image", values.image);
+
+      const res = await axiosPublic.post(hostURl, formData, {
+        headers: { "Content-Type": "multipart/form-data", withCredentials: true, },
+      });
+
+      const imageUrl = res.data?.data?.display_url;
+
+      const userData = {
+        fullName: values.fullName,
+        email: values.email,
+        password: values.password,
+        image: imageUrl,
+      };
+
+      console.log("Sign up data:", userData);
+      toast.success("Account created successfully!");
+    } catch (error) {
+      toast.error("Image upload or sign up failed.");
+      console.error(error);
     }
   }
 
