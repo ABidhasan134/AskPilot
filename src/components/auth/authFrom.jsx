@@ -11,7 +11,8 @@ import FromField from "./fromFild";
 import Link from "next/link";
 import { toast } from "sonner";
 import UseAxiosPublic from "@/hooks/useAxiosPublic";
-import axios from "axios";
+// import axios from "axios";
+// import { cookies } from "next/headers";
 
 const imageHostkey = process.env.NEXT_PUBLIC_IMAGE_HOSTING_API_KEY;
 const hostURl=`https://api.imgbb.com/1/upload?key=${imageHostkey}`;
@@ -56,7 +57,9 @@ function AuthForm({ type }) {
     // console.log(values);
     const email = { email: values.email };
     const resJWT=await axiosPublic.post(`/api/jwt`,email,)
+    // cookies.set("jwt", resJWT.data.token);
     console.log(resJWT.data)
+
     //  try {
     //   const formData = new FormData();
     //   formData.append("image", values.image);
