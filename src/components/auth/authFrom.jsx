@@ -54,29 +54,39 @@ function AuthForm({ type }) {
 
  async function onSubmit(values) {
     // console.log(values);
-     try {
-      const formData = new FormData();
-      formData.append("image", values.image);
+    const email = { email: values.email };
+    const resJWT=await axiosPublic.post(`/api/jwt`,email,)
+    console.log(resJWT.data)
+    //  try {
+    //   const formData = new FormData();
+    //   formData.append("image", values.image);
 
-      const res = await axios.post(hostURl, formData, {
-        headers: { "Content-Type": "multipart/form-data"},
-      });
+    //   const res = await axios.post(hostURl, formData, {
+    //     headers: { "Content-Type": "multipart/form-data"},
+    //   });
 
-      const imageUrl = res.data?.data?.display_url;
+    //   const imageUrl = res.data?.data?.display_url;
+    //   if(imageUrl){
+    //     const userData = {
+    //     fullName: values.fullName,
+    //     email: values.email,
+    //     password: values.password,
+    //     image: imageUrl,
+    //   };
+    //   const res= await axiosPublic.post(`/api/signUp`,userData)
+    //   if(res.data.insertedId){
+    //     const resJWT=await axiosPublic.post(`/api/jwt`,values.email,)
+    //   }
+    //   console.log(res.data)
+    //   }
+      
 
-      const userData = {
-        fullName: values.fullName,
-        email: values.email,
-        password: values.password,
-        image: imageUrl,
-      };
-
-      console.log("Sign up data:", userData);
-      toast.success("Account created successfully!");
-    } catch (error) {
-      toast.error("Image upload or sign up failed.");
-      console.error(error);
-    }
+    //   // console.log("Sign up data:", userData);
+    //   toast.success("Account created successfully!");
+    // } catch (error) {
+    //   toast.error("Image upload or sign up failed.");
+    //   console.error(error);
+    // }
   }
 
   return (
