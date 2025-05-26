@@ -11,7 +11,7 @@ import FromField from "./fromFild";
 import Link from "next/link";
 import { toast } from "sonner";
 import UseAxiosPublic from "@/hooks/useAxiosPublic";
-// import axios from "axios";
+import axios from "axios";
 // import { cookies } from "next/headers";
 
 const imageHostkey = process.env.NEXT_PUBLIC_IMAGE_HOSTING_API_KEY;
@@ -21,6 +21,7 @@ function AuthForm({ type }) {
   const axiosPublic=UseAxiosPublic();
   // console.log(db);
   const isLogIn = type === "logIn";
+  // console.log(isLogIn)
 
   const baseSchema = {
     email: z.string().email("Invalid email address"),
@@ -56,40 +57,45 @@ function AuthForm({ type }) {
  async function onSubmit(values) {
     // console.log(values);
     const email = { email: values.email };
-    const resJWT=await axiosPublic.post(`/api/jwt`,email,)
+    if(isLogIn===false){
+      try {
+      const formData = new FormData();
+      formData.append("image", values.image);
+
+      const res = await axios.post(hostURl, formData, {
+        headers: { "Content-Type": "multipart/form-data"},
+      });
+
+      const imageUrl = res.data?.data?.display_url;
+      if(imageUrl){
+        const userData = {
+        fullName: values.fullName,
+        email: values.email,
+        password: values.password,
+        image: imageUrl,
+      };
+      const res= await axiosPublic.post(`/api/signUp`,userData)
+      if(res.data.result.insertedId){
+         const resJWT=await axiosPublic.post(`/api/jwt`,email,)
     // cookies.set("jwt", resJWT.data.token);
-    console.log(resJWT.data)
-
-    //  try {
-    //   const formData = new FormData();
-    //   formData.append("image", values.image);
-
-    //   const res = await axios.post(hostURl, formData, {
-    //     headers: { "Content-Type": "multipart/form-data"},
-    //   });
-
-    //   const imageUrl = res.data?.data?.display_url;
-    //   if(imageUrl){
-    //     const userData = {
-    //     fullName: values.fullName,
-    //     email: values.email,
-    //     password: values.password,
-    //     image: imageUrl,
-    //   };
-    //   const res= await axiosPublic.post(`/api/signUp`,userData)
-    //   if(res.data.insertedId){
-    //     const resJWT=await axiosPublic.post(`/api/jwt`,values.email,)
-    //   }
-    //   console.log(res.data)
-    //   }
+    toast.success("Account created successfully!");
+    console.log("jwt respons",resJWT)
+    return;
+      }
+      console.log("Database respons",res.data)
+      }
       
 
-    //   // console.log("Sign up data:", userData);
-    //   toast.success("Account created successfully!");
-    // } catch (error) {
-    //   toast.error("Image upload or sign up failed.");
-    //   console.error(error);
-    // }
+      // console.log("Sign up data:", userData);
+      
+    } catch (error) {
+      toast.error("Image upload or sign up failed.");
+      console.error(error);
+    }
+  }
+  else{
+    console.log("logIn values",values)
+  }
   }
 
   return (
