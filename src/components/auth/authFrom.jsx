@@ -12,13 +12,12 @@ import Link from "next/link";
 import { toast } from "sonner";
 import UseAxiosPublic from "@/hooks/useAxiosPublic";
 import axios from "axios";
-// import { cookies } from "next/headers";
 
 const imageHostkey = process.env.NEXT_PUBLIC_IMAGE_HOSTING_API_KEY;
-const hostURl=`https://api.imgbb.com/1/upload?key=${imageHostkey}`;
-console.log(imageHostkey)
+const hostURl = `https://api.imgbb.com/1/upload?key=${imageHostkey}`;
+console.log(imageHostkey);
 function AuthForm({ type }) {
-  const axiosPublic=UseAxiosPublic();
+  const axiosPublic = UseAxiosPublic();
   // console.log(db);
   const isLogIn = type === "logIn";
   // console.log(isLogIn)
@@ -54,48 +53,59 @@ function AuthForm({ type }) {
     },
   });
 
- async function onSubmit(values) {
+  async function onSubmit(values) {
     // console.log(values);
     const email = { email: values.email };
-    if(isLogIn===false){
+    if (isLogIn === false) {
       try {
-      const formData = new FormData();
-      formData.append("image", values.image);
+        const formData = new FormData();
+        formData.append("image", values.image);
 
-      const res = await axios.post(hostURl, formData, {
-        headers: { "Content-Type": "multipart/form-data"},
-      });
+        const res = await axios.post(hostURl, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
-      const imageUrl = res.data?.data?.display_url;
-      if(imageUrl){
-        const userData = {
-        fullName: values.fullName,
-        email: values.email,
-        password: values.password,
-        image: imageUrl,
-      };
-      const res= await axiosPublic.post(`/api/signUp`,userData)
-      if(res.data.result.insertedId){
-         const resJWT=await axiosPublic.post(`/api/jwt`,email,)
-    // cookies.set("jwt", resJWT.data.token);
-    toast.success("Account created successfully!");
-    console.log("jwt respons",resJWT)
-    return;
+        const imageUrl = res.data?.data?.display_url;
+        if (imageUrl) {
+          const userData = {
+            fullName: values.fullName,
+            email: values.email,
+            password: values.password,
+            image: imageUrl,
+          };
+          const res = await axiosPublic.post(`/api/signUp`, userData);
+          if (res.data.result.insertedId) {
+            const resJWT = await axiosPublic.post(`/api/jwt`, email);
+            // cookies.set("jwt", resJWT.data.token);
+            toast.success("Account created successfully!");
+            console.log("jwt respons", resJWT);
+            return;
+          } else {
+            toast.error("Account failed to create. Please try again.");
+          }
+          // console.log("Database respons",res.data)
+          return;
+        } else {
+          toast.error("Have a problem to uploade Image. Please try agin");
+        }
+
+        // console.log("Sign up data:", userData);
+      } catch (error) {
+        toast.error("Image upload or sign up failed.");
+        console.error(error);
       }
-      console.log("Database respons",res.data)
+    } else {
+      try{
+        // console.log(values)
+        const res=await axiosPublic.post(`/api/singIn`,values)
+        console.log(res.data);
       }
-      
-
-      // console.log("Sign up data:", userData);
-      
-    } catch (error) {
-      toast.error("Image upload or sign up failed.");
-      console.error(error);
+      catch(error){
+        toast.error("Login failed.");
+        // console.log("Error to log in",error)
+      }
+      // console.log("logIn values", values);
     }
-  }
-  else{
-    console.log("logIn values",values)
-  }
   }
 
   return (
