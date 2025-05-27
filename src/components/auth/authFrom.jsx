@@ -98,7 +98,19 @@ function AuthForm({ type }) {
       try{
         // console.log(values)
         const res=await axiosPublic.post(`/api/singIn`,values)
-        console.log(res.data);
+        if(res.data.status===200){
+          const jwtRes= await axiosPublic.post('/api/jwt',email)
+          console.log(jwtRes);
+          if(jwtRes.data.token){
+            toast.success('Log In successful')
+            return;
+          }
+          toast.error("You are aunorthorize")
+          return;
+        }
+        else{
+          toast.error("Log In failed. please try agin")
+        }
       }
       catch(error){
         toast.error("Login failed.");
