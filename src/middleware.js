@@ -5,12 +5,12 @@ export function middleware(request) {
     request.cookies.get('__Secure-next-auth.session-token')?.value ||
     request.cookies.get('next-auth.session-token')?.value;
 
-  // console.log("token from middleware", token);
+  console.log("token from middleware", token);
 
-  const isAuth = Boolean(token);
+  // const isAuth = Boolean(token);
 
   // Redirect only if NOT authenticated
-  if (!isAuth) {
+  if (!token) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 

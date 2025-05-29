@@ -12,12 +12,17 @@ import Link from "next/link";
 import { toast } from "sonner";
 import UseAxiosPublic from "@/hooks/useAxiosPublic";
 import axios from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const imageHostkey = process.env.NEXT_PUBLIC_IMAGE_HOSTING_API_KEY;
 const hostURl = `https://api.imgbb.com/1/upload?key=${imageHostkey}`;
-console.log(imageHostkey);
-function AuthForm({ type }) {
+// console.log(imageHostkey);
+const AuthForm=({ type })=> {
   const axiosPublic = UseAxiosPublic();
+  const router=useRouter();
+  const searchParam= useSearchParams()
+  const path= searchParam.get('redirect')
   // console.log(db);
   const isLogIn = type === "logIn";
   // console.log(isLogIn)
@@ -78,7 +83,10 @@ function AuthForm({ type }) {
             const resJWT = await axiosPublic.post(`/api/jwt`, email);
             // cookies.set("jwt", resJWT.data.token);
             toast.success("Account created successfully!");
-            console.log("jwt respons", resJWT);
+            // console.log("jwt respons", resJWT);
+            setTimeout(() => {
+              router.push('/')
+            }, 2000);
             return;
           } else {
             toast.error("Account failed to create. Please try again.");
@@ -92,17 +100,26 @@ function AuthForm({ type }) {
         // console.log("Sign up data:", userData);
       } catch (error) {
         toast.error("Image upload or sign up failed.");
-        console.error(error);
+        // console.error(error);
       }
     } else {
       try{
         // console.log(values)
-        const res=await axiosPublic.post(`/api/singIn`,values)
-        if(res.data.status===200){
+        const res=await signIn(`credentials`,{
+          email: values.email,
+          password: values.password,
+          redirect: true,
+          callbackUrl:path?path:'/'
+        })
+        console.log(res)
+        if(res.status===200){
           const jwtRes= await axiosPublic.post('/api/jwt',email)
-          console.log(jwtRes);
+          // console.log(jwtRes);
           if(jwtRes.data.token){
             toast.success('Log In successful')
+            setTimeout(() => {
+              router.push('/')
+            }, 2000);
             return;
           }
           toast.error("You are aunorthorize")
