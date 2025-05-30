@@ -110,18 +110,12 @@ const AuthForm = ({ type }) => {
           password: values.password,
           redirect: false,
         });
-
         console.log("this responses form the auth from", res);
         if (res?.ok) {
-          const jwtRes = await axiosPublic.post("/api/jwt", email);
-          if (jwtRes.data.token) {
-            toast.success("Log In successful");
+          toast.success("Log In successful");
             setTimeout(() => {
               router.push(path || "/");
             }, 2000);
-          } else {
-            toast.error("Unauthorized");
-          }
         } else {
           toast.error("Log In failed. Please try again");
         }
