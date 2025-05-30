@@ -18,11 +18,11 @@ import { signIn } from "next-auth/react";
 const imageHostkey = process.env.NEXT_PUBLIC_IMAGE_HOSTING_API_KEY;
 const hostURl = `https://api.imgbb.com/1/upload?key=${imageHostkey}`;
 // console.log(imageHostkey);
-const AuthForm=({ type })=> {
+const AuthForm = ({ type }) => {
   const axiosPublic = UseAxiosPublic();
-  const router=useRouter();
-  const searchParam= useSearchParams()
-  const path= searchParam.get('redirect')
+  const router = useRouter();
+  const searchParam = useSearchParams();
+  const path = searchParam.get("redirect");
   // console.log(db);
   const isLogIn = type === "logIn";
   // console.log(isLogIn)
@@ -85,7 +85,7 @@ const AuthForm=({ type })=> {
             toast.success("Account created successfully!");
             // console.log("jwt respons", resJWT);
             setTimeout(() => {
-              router.push('/')
+              router.push("/");
             }, 2000);
             return;
           } else {
@@ -103,33 +103,29 @@ const AuthForm=({ type })=> {
         // console.error(error);
       }
     } else {
-      try{
+      try {
         // console.log(values)
-        const res=await signIn(`credentials`,{
+        const res = await signIn("credentials", {
           email: values.email,
           password: values.password,
-          redirect: true,
-          callbackUrl:path?path:'/'
-        })
-        console.log(res)
-        if(res.status===200){
-          const jwtRes= await axiosPublic.post('/api/jwt',email)
-          // console.log(jwtRes);
-          if(jwtRes.data.token){
-            toast.success('Log In successful')
+          redirect: false,
+        });
+
+        console.log("this responses form the auth from", res);
+        if (res?.ok) {
+          const jwtRes = await axiosPublic.post("/api/jwt", email);
+          if (jwtRes.data.token) {
+            toast.success("Log In successful");
             setTimeout(() => {
-              router.push('/')
+              router.push(path || "/");
             }, 2000);
-            return;
+          } else {
+            toast.error("Unauthorized");
           }
-          toast.error("You are aunorthorize")
-          return;
+        } else {
+          toast.error("Log In failed. Please try again");
         }
-        else{
-          toast.error("Log In failed. please try agin")
-        }
-      }
-      catch(error){
+      } catch (error) {
         toast.error("Login failed.");
         // console.log("Error to log in",error)
       }
@@ -166,6 +162,6 @@ const AuthForm=({ type })=> {
       </div>
     </div>
   );
-}
+};
 
 export default AuthForm;
