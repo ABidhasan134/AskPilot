@@ -4,7 +4,7 @@ import React from 'react'
 const page = () => {
   return (
     <div>
-      <Agent></Agent>
+      <Agent name='Ai agent'></Agent>
     </div>
   )
 }
