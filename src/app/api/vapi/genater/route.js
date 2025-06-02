@@ -1,9 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY); // Ensure this is in your .env file
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY); // Ensure this is in your .env file
 async function generateText(prompt) {
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // or gemini-1.0-pro
+  console.log('this is vapi api',process.env.NEXT_PUBLIC_GOOGLE_AI_API_KEY)
   const result = await model.generateContent(prompt);
   const response = await result.response;
   return response.text();
