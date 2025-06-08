@@ -1,10 +1,8 @@
-// app/sign-in/page.tsx or similar
-"use client";
-import AuthFrom from "@/components/auth/authFrom";
+// app/(auth)/sign-in/page.tsx or page.jsx
+import AuthFormWrapper from "@/components/auth/AuthFormWrapper";
 import React from "react";
 
-const Page = () => {
-  return <AuthFrom type="logIn" />;
-};
 
-export default Page;
+export default function Page() {
+  return <AuthFormWrapper />;
+}

@@ -13,7 +13,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import UseAxiosPublic from "@/hooks/useAxiosPublic";
 import axios from "axios";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter} from 'next/navigation';
 import { signIn } from "next-auth/react";
 
 const imageHostkey = process.env.NEXT_PUBLIC_IMAGE_HOSTING_API_KEY;
@@ -22,8 +22,8 @@ const hostURl = `https://api.imgbb.com/1/upload?key=${imageHostkey}`;
 const AuthForm = ({ type }) => {
   const axiosPublic = UseAxiosPublic();
   const router = useRouter();
-  const searchParam = useSearchParams();
-  const path = searchParam.get("redirect");
+  // const searchParams= useSearchParams();
+  // const path=searchParams.get('redirect')
   // console.log(db);
   const isLogIn = type === "logIn";
   // console.log(isLogIn)
@@ -115,7 +115,8 @@ const AuthForm = ({ type }) => {
         if (res?.ok) {
           toast.success("Log In successful");
             setTimeout(() => {
-              router.push(path || "/");
+              // router.push(path || "/");
+              router.push("/");
             }, 2000);
         } else {
           toast.error("Log In failed. Please try again");
