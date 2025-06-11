@@ -3,14 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaCalendarAlt } from "react-icons/fa";
 import { VscStarEmpty } from "react-icons/vsc";
-import { DialogHeader,Dialog,
+import {
+  DialogHeader,
+  Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
- 
   DialogTitle,
-  DialogTrigger, } from "../ui/dialog";
+  DialogTrigger,
+} from "../ui/dialog";
+import StartInterview from "./startInterview";
 
 const PastInterviewCard = ({ interview }) => {
   // console.log(interview)
@@ -62,7 +65,7 @@ const PastInterviewCard = ({ interview }) => {
                 FeedBack
               </Link>
             ) : (
-              <Dialog>
+              <Dialog className="absolute">
                 <DialogTrigger asChild>
                   <span>View Interview</span>
                 </DialogTrigger>
@@ -70,15 +73,17 @@ const PastInterviewCard = ({ interview }) => {
                   <DialogHeader>
                     <DialogTitle>{interview.role} Interview</DialogTitle>
                     <DialogDescription>
-                      This is a placeholder for the interview dialog.
+                      Are you sure 
                     </DialogDescription>
                   </DialogHeader>
                   <div className="mt-4">
-                    <p>You can place interview info or components here.</p>
+                    <StartInterview type='start Interview'interview={interview}></StartInterview>
                   </div>
                   <DialogFooter>
                     <DialogClose asChild>
-                      <span>Close</span>
+                      <span className="btn-primary flex items-center">
+                        Close
+                      </span>
                     </DialogClose>
                   </DialogFooter>
                 </DialogContent>
