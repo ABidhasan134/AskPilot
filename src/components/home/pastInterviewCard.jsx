@@ -36,7 +36,7 @@ const PastInterviewCard = ({interview}) => {
           </div>
           <button className='btn-primary'>
             <Link href={
-              interview.feedback?`/interview/${interview._id}/feedback`:`/interview/${interview._id}`
+              interview.feedback?`/interview/${interview._id}/feedback`:`/interview/${interview.id}`
             }>
             {interview.feedback?'Check feedback':'view interview'}
             </Link>
