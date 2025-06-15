@@ -1,95 +1,93 @@
 "use client";
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import Vapi from "@vapi-ai/web";
 import aiAvtar from "@/../../public/ai-avatar.png";
 import userImg from "@/../../public/user-avatar.png";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+
 const Agent = ({ name }) => {
-  const isSpeaking = true;
-  const messages = [
-    "what is your name?",
-    "My name is Abid hasan. What is about you?",
-  ];
-  const [questions, setQuestion] = useState();
-  // const active="Active"
-  // const Inactive="InActive"
-  // const connecting="Connecting"
-  // const finished="Finished"
-  const data = localStorage.getItem("interviewQuestions");
-  console.log("this data from localstorage", data);
-  const callStack = ["Active", "Inactive", "Connecting", "Finished"];
-  const callStatus = callStack[0];
-  const lastMessages = messages[messages.length - 1];
+  const [questions, setQuestions] = useState([]);
+  const [vapi, setVapi] = useState(null);
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedData = localStorage.getItem("interviewQuestions");
-      setQuestion(storedData);
-      console.log("this data from localStorage", storedData);
+    // 1. Get questions from localStorage
+    const storedData = localStorage.getItem("interviewQuestions");
+    if (storedData) {
+      try {
+        const parsed = JSON.parse(storedData);
+        setQuestions(parsed);
+      } catch (error) {
+        console.error("❌ Failed to parse questions from localStorage:", error);
+      }
     }
+
+    // 2. Ask for microphone access
+    navigator.mediaDevices.getUserMedia({ audio: true }).catch((err) => {
+      console.error("❌ Microphone access error:", err);
+    });
+
+    // 3. Initialize Vapi
+    const vapiInstance = new Vapi({
+      apiKey: process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY,
+    });
+
+    setVapi(vapiInstance);
+
+    // 4. Event listeners
+    vapiInstance.on("call-start", () => console.log("✅ Call started"));
+    vapiInstance.on("call-end", () => console.log("📞 Call ended"));
+    vapiInstance.on("error", (err) => console.error("🚨 Vapi error:", err));
   }, []);
+
+  // 5. Start Interview Call
+  const startInterviewCall = async () => {
+    if (!vapi) {
+      console.error("⛔ Vapi is not initialized yet.");
+      return;
+    }
+
+    if (!questions || questions.length === 0) {
+      console.error("⛔ No interview questions available.");
+      return;
+    }
+
+    console.log("▶️ Starting interview with questions:", questions);
+
+    try {
+      await vapi.start({
+        assistant: "b02c8158-a2de-457d-96e2-d5e2c5aab380",
+        variables: {
+          questions,
+        },
+      });
+    } catch (err) {
+      console.error("❌ Failed to start Vapi call:", err);
+    }
+  };
+
   return (
     <>
       <div className="call-view mb-5">
         <div className="card-interviewer">
           <div className="avatar">
-            <Image
-              src={aiAvtar}
-              alt="vapi"
-              height={65}
-              width={54}
-              className="object-cover"
-            ></Image>
-            {isSpeaking && <span className="animate-speak"></span>}
+            <Image src={aiAvtar} alt="vapi" height={65} width={54} className="object-cover" />
+            <span className="animate-speak" />
           </div>
           <p>{name}</p>
         </div>
+
         <div className="card-border">
           <div className="card-content">
-            <Image
-              src={userImg}
-              alt="profile-image"
-              width={539}
-              height={539}
-              className="rounded-full object-cover size-[120px]"
-            ></Image>
+            <Image src={userImg} alt="profile-image" width={539} height={539} className="rounded-full object-cover size-[120px]" />
           </div>
         </div>
       </div>
-      {messages.length > 0 && (
-        <div className="transcript-border mb-5">
-          <div className="transcript">
-            <p
-              key={lastMessages}
-              className={cn(
-                "transition-opacity duration-500 opacity-0",
-                "animate-fadeIn opacity-100"
-              )}
-            >
-              {lastMessages}
-            </p>
-          </div>
-        </div>
-      )}
+
       <div className="grid justify-center">
-        {callStack === "Active" ? (
-          <button className="relative btn-call">
-            <span
-              className={cn(
-                "absolute animate-ping rounded-full opacity-75",
-                callStack !== "Connecting" && "hidden"
-              )}
-            />
-            <span className="relative">
-              {callStatus === "Inactive" || callStatus === "Finished"
-                ? "Call"
-                : ". . ."}
-            </span>
-          </button>
-        ) : (
-          <button className="btn-disconnect grid justify-center items-center">
-            End
-          </button>
-        )}
+        <button onClick={startInterviewCall} className="btn-call">
+          Start Interview
+        </button>
       </div>
     </>
   );
