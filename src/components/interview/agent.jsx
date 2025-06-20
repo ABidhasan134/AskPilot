@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Vapi from "@vapi-ai/web";
 import aiAvtar from "@/../../public/ai-avatar.png";
 import userImg from "@/../../public/user-avatar.png";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const Agent = ({ name }) => {
@@ -27,20 +26,19 @@ const Agent = ({ name }) => {
       console.error("❌ Microphone access error:", err);
     });
 
-    // 3. Initialize Vapi
+    // 3. Initialize Vapi instance
     const vapiInstance = new Vapi({
       apiKey: process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY,
+      baseURL: "/api/vapi-proxy",
     });
 
-    setVapi(vapiInstance);
-
-    // 4. Event listeners
     vapiInstance.on("call-start", () => console.log("✅ Call started"));
     vapiInstance.on("call-end", () => console.log("📞 Call ended"));
     vapiInstance.on("error", (err) => console.error("🚨 Vapi error:", err));
+
+    setVapi(vapiInstance);
   }, []);
 
-  // 5. Start Interview Call
   const startInterviewCall = async () => {
     if (!vapi) {
       console.error("⛔ Vapi is not initialized yet.");
@@ -56,10 +54,8 @@ const Agent = ({ name }) => {
 
     try {
       await vapi.start({
-        assistant: "b02c8158-a2de-457d-96e2-d5e2c5aab380",
-        variables: {
-          questions,
-        },
+        assistant: "b02c8158-a2de-457d-96e2-d5e2c5aab380", // Your assistant ID from Vapi
+        variables: { questions },
       });
     } catch (err) {
       console.error("❌ Failed to start Vapi call:", err);
@@ -71,7 +67,13 @@ const Agent = ({ name }) => {
       <div className="call-view mb-5">
         <div className="card-interviewer">
           <div className="avatar">
-            <Image src={aiAvtar} alt="vapi" height={65} width={54} className="object-cover" />
+            <Image
+              src={aiAvtar}
+              alt="vapi"
+              height={65}
+              width={54}
+              className="object-cover"
+            />
             <span className="animate-speak" />
           </div>
           <p>{name}</p>
@@ -79,7 +81,13 @@ const Agent = ({ name }) => {
 
         <div className="card-border">
           <div className="card-content">
-            <Image src={userImg} alt="profile-image" width={539} height={539} className="rounded-full object-cover size-[120px]" />
+            <Image
+              src={userImg}
+              alt="profile-image"
+              width={539}
+              height={539}
+              className="rounded-full object-cover size-[120px]"
+            />
           </div>
         </div>
       </div>
