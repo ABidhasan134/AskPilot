@@ -27,10 +27,11 @@ const Agent = ({ name }) => {
     });
 
     // 3. Initialize Vapi instance
-    const vapiInstance = new Vapi({
-      apiKey: process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY,
-      baseURL: "/api/vapi-proxy",
-    });
+   const vapiInstance = new Vapi({
+  apiKey: process.env.NEXT_PUBLIC_VAPI_PUBLIC_API_KEY,
+  baseURL: "/api/vapi", // this must match your Next.js proxy route
+});
+
 
     vapiInstance.on("call-start", () => console.log("✅ Call started"));
     vapiInstance.on("call-end", () => console.log("📞 Call ended"));
